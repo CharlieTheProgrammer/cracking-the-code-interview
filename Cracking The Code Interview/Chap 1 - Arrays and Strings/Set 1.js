@@ -105,3 +105,74 @@ assert.ok(isPermutation2('abbc', 'bbca') === true)
 assert.ok(isPermutation2('abbC', 'bbCa') === true)
 assert.ok(isPermutation2('a', 'bbca') === false)
 assert.ok(isPermutation2('A', 'a') === false)
+
+/**
+ * 1.3 Write a method to replace all spaces in a string with '%20.
+ */
+
+function urlIfy(str) {
+    if (str.length === 0 || !str) return url
+
+    let trimmedStr = str.trim()
+    let arr = []
+    for (let i = 0; i < trimmedStr.length; i++) {
+        if (trimmedStr[i] === ' ') {
+            arr.push('%20')
+        } else {
+            arr.push(trimmedStr[i])
+        }
+    }
+
+    return arr.join('')
+}
+
+assert.ok(urlIfy(" Mr. Smith") === "Mr.%20Smith")
+assert.ok(urlIfy(" Mr.  Smith") === "Mr.%20%20Smith")
+assert.ok(urlIfy("  Mr.  Smith") === "Mr.%20%20Smith")
+assert.ok(urlIfy("  Mr.  Smith ") === "Mr.%20%20Smith")
+assert.ok(urlIfy(" Mr.  Smith ") === "Mr.%20%20Smith")
+assert.ok(urlIfy("Mr. Smith Junior") === "Mr.%20Smith%20Junior")
+
+/**
+ * 1.4 Palindrome Permutation
+ * Given a string, write a function to check if it is a permutation of a palindrome.
+ * A palindrome is a word that is the same backwards or forwards.
+ *
+ * In other words, the first half of a palindrome is a mirror image or the second half
+ * aacctt is a palindrome because each character comes in pairs, ie even numbers.
+ *
+ * The exception here is an odd numbered word where there is only 1 set of characters
+ * that has an odd count.
+ * aaccttj works -> actjtca
+ * aaccttjjj works too -> actjjjtca
+ *
+ * Therefore all characters must be in pairs and/or there can only be one set of
+ * character that have an odd number of characters.
+ */
+
+function hasPalindromePermutation(str) {
+    if (!str || str.length === 0) return false
+    let ht = {}
+
+    // Map chars to hash table where values is the count of chars
+    for (let i = 0; i < str.length; i++) {
+        if (str[i] === ' ') continue    // Ignoring spaces
+        let char = str[i].toLowerCase() // Ignoring casing
+        if (ht[char]) {
+            ht[char] = ht[char] + 1
+        } else {
+            ht[char] = 1
+        }
+    }
+
+    // I only care that there is 1 or less char with an odd count.
+    // If there are more than 1 of these, then the str cannot be a palindrome
+    return Object.values(ht).filter(value => value % 2 !== 0).length <= 1
+}
+
+assert.ok(hasPalindromePermutation('Anna') === true)
+assert.ok(hasPalindromePermutation('Civic') === true)
+assert.ok(hasPalindromePermutation('Kayak') === true)
+assert.ok(hasPalindromePermutation('Red rum, sir, is murder') === true)
+assert.ok(hasPalindromePermutation('Step on no pets') === true)
+assert.ok(hasPalindromePermutation('Top spot') === true)
