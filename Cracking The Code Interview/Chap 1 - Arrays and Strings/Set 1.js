@@ -176,3 +176,80 @@ assert.ok(hasPalindromePermutation('Kayak') === true)
 assert.ok(hasPalindromePermutation('Red rum, sir, is murder') === true)
 assert.ok(hasPalindromePermutation('Step on no pets') === true)
 assert.ok(hasPalindromePermutation('Top spot') === true)
+
+/**
+ * 1.5 One Away
+ * There are three types of edits that can be performed on strings: insert a character,
+ * remove a character, or replace a character. Given two string, write a function to check
+ * if they are one or zero edits away.
+ *
+ * This one was tough because there are different checks I needed to do.
+ *
+ * The easiest thing to check for was the one or zero edits based on length.
+ * If the difference in length between the strings is more than one, then it's
+ * certainly not one away because more than one edit would be needed to make them
+ * the same length.
+ *
+ * If the strings are the same size, then I simply only need to count if there are
+ * any mismatches in the letters and if there are more than 1, then it's not one edit away.
+ *
+ * If the the strings are not the same size, then I need to insert the missing letter
+ * from the longer string into the shorter string or vice versa, and continue
+ * to make sure all the letters match after the insertion/deletion.
+ *
+ * The biggest challenges I faced was organizing the different steps of the algo
+ * to make the code readable and how to deal with the insertion/removal. I need
+ * to know the length of each string and then dynamically decide which string
+ * to perform the insert on.
+ *
+ * Since strings are immutable in JS, I have to create a copy of them in order
+ * to modify them. Also, I have to dynamically update the string.
+ *
+ * One of the expensive operations here is copying over the string, which is o(n).
+ * However, this doesn't not signifiantly add to the runtime. O(2N) of worst
+ * case scenario where the strings are slightly different in size, which reduces
+ * to O(N).
+ *
+ * Best case O(1) if strings are more than 1 in length difference.
+ * Else, O(N) since we're running through both strings in one pass.
+ *
+ */
+
+function oneAway(str1, str2) {
+    const str1Len = str1.length
+    const str2Len = str2.length
+
+    if (Math.abs(str1Len - str2Len) > 1) return false
+
+    if (str1Len === str2Len) {
+        // Iterate over string and check that each character matches the other exactly
+        for (let char = 0; char < str1Len; char++) {
+            let errors = 0
+            if (errors === 2) return false
+            if (str1[char] !== str2[char]) errors++
+        }
+        return true
+    }
+
+    let errors = 0
+    let longestLen = str1Len > str2Len ? str1Len : str2Len
+    let strs = {
+        [str1Len]: str1,
+        [str2Len]: str2
+    }
+
+    for (let char = 0; char < longestLen; char++) {
+        if (strs[str1Len][char] !== strs[str2Len][char]) {
+            ++errors
+            if (errors === 2) return false
+            strs[longestLen - 1] = strs[longestLen - 1].substring(0, char) + strs[longestLen][char] + strs[longestLen - 1].substring(char)
+        }
+    }
+    return true
+}
+
+assert.ok(oneAway("pale", 'ple') === true)
+assert.ok(oneAway("pales", 'pale') === true)
+assert.ok(oneAway("pale", 'bale') === true)
+assert.ok(oneAway("pale", 'bae') === false)
+assert.ok(oneAway("apple", 'aple') === true)
