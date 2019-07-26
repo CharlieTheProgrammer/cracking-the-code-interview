@@ -253,3 +253,52 @@ assert.ok(oneAway("pales", 'pale') === true)
 assert.ok(oneAway("pale", 'bale') === true)
 assert.ok(oneAway("pale", 'bae') === false)
 assert.ok(oneAway("apple", 'aple') === true)
+
+
+/**
+ * 1.6 String Compression
+ * Implement a method to perform basic string compression using the counts
+ * of repeated characters. For example, the string aabcccccaaa would become a2blc5a3. If the
+ * "compressed" string would not become smaller than the original string, your method should return
+ * the original string. You can assume the string has only uppercase and lowercase letters (a - z).
+ *
+ */
+
+function letterAndCount(...arr) {
+    let letter = arr[0]
+    let count = arr.length
+    return count > 0 ? letter + count : letter
+}
+
+function compressString2(str) {
+    if (str.length < 2) return str
+
+    let prevChar = str[0]
+    let ta = [str[0]]
+    let aa = []
+
+    for (let i = 1; i < str.length; i++) {
+        if (prevChar === str[i]) {
+            ta.push(str[i])
+            prevChar = str[i]
+        } else {
+            aa.push(letterAndCount(...ta))
+            prevChar = str[i]
+            ta = [str[i]]
+        }
+    }
+
+    aa.push(letterAndCount(...ta))
+    let compressedString = aa.join('')
+
+    return compressedString.length >= str.length ? str : compressedString
+}
+
+assert.ok(compressString2('') === '')
+assert.ok(compressString2('a') === 'a')
+assert.ok(compressString2('ab') === 'ab')
+assert.ok(compressString2('aa') === 'aa')
+assert.ok(compressString2('aaa') === 'a3')
+assert.ok(compressString2('aaab') === 'aaab')
+assert.ok(compressString2('aaabaaa') === 'a3b1a3')
+assert.ok(compressString2('aabcccccaaa') === 'a2b1c5a3')
