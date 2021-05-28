@@ -128,4 +128,6 @@ ll.insertAfter(11,2)
 
 // DoublyLinkedList.swap(node1, node2);
 
-ll.map(data => console.log(data));
+module.exports = {
+	DoublyLinkedList
+}

@@ -95,4 +95,6 @@ let node2 = ll.find(3);
 
 LinkedList.swap(node1, node2);
 
-ll.map(data => console.log(data));
+module.exports = {
+  LinkedList
+}
